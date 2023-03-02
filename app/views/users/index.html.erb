@@ -1,0 +1,30 @@
+<h1>Users</h1>
+<%= form_tag(users_path, method: :get) do %>
+  <%= text_field_tag :search, params[:search], placeholder: "Search users" %>
+  <%= submit_tag "Search" %>
+<% end %>
+<table>
+  <thead>
+  <tr>
+    <th>User</th>
+    <th>Link</th>
+    <th>Sent Messages</th>
+    <th>Received Messages</th>
+    <th>Total Messages</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @users.each do |user| %>
+    <% if user != current_user %>
+      <tr>
+        <td><%= user.email %></td>
+        <td><%= link_to "Chat", chat_user_path(user) %></td>
+        <td><%= current_user.sent_messages.where(receiver_id: user.id).count %></td>
+        <td><%= current_user.received_messages.where(sender_id: user.id).count %></td>
+        <td><%= current_user.received_messages.where(sender_id: user.id).count + current_user.sent_messages.where(receiver_id: user.id).count %></td>
+      </tr>
+    <% end %>
+  <% end %>
+  </tbody>
+</table>
+
