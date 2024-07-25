@@ -1,0 +1,17 @@
+<div class="user-info-container">
+  <h2 class="user-email"><%= @user.email.split('@')[0].capitalize %></h2>
+</div>
+<div class="messages-container">
+  <% if @messages.any? %>
+    <%= render partial: "messages/message", collection: @messages %>
+  <% end %>
+</div>
+<%= form_for @message, url: messages_path, remote: true, id: 'new_message' do |form| %>
+  <div class="input-group mb-3 message-input-group">
+    <%= form.hidden_field :receiver_id, value: @user.id %>
+    <%= form.text_field :content, class: "form-control message-input", placeholder: "Type your message here..." %>
+    <div class="input-group-append">
+      <%= form.submit "Send", class: "btn btn-primary send-button" %>
+    </div>
+  </div>
+<% end %>

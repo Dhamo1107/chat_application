@@ -1,75 +1,38 @@
-<h2>Make a chat with your Friends!</h2>
-<%= form_for(users_path, method: :get) do %>
-  <div class="row">
-    <div class="col-md-6">
-      <%= text_field_tag :search, params[:search], class: "form-control form-control-sm", placeholder: "Search users" %>
-    </div>
-    <div class="col-md-6">
-      <%= submit_tag "Search", class: "btn btn-primary btn-sm" %>
+<div class="chat-container">
+  <div class="user-list">
+    <h2>Chat with your Friends!</h2>
+
+    <% if @users.any? %>
+      <%= form_for(users_path, method: :get) do %>
+        <div class="search-bar">
+          <%= text_field_tag :search, params[:search], class: "form-control form-control-sm", placeholder: "Search users" %>
+          <%= submit_tag "Search", class: "btn btn-primary btn-sm" %>
+          <%= link_to 'Clear', users_path, class: 'btn btn-secondary btn-sm', id: 'clear-search', title: 'Clear Search' %>
+        </div>
+      <% end %>
+      <div class="user-items">
+        <% @users.each do |user| %>
+          <%= link_to chat_user_path(user), remote: true, class: 'user-item-link', tabindex: "0" do %>
+            <div class="user-item">
+              <div class="user-info">
+                <strong class="user-name"><%= user.email.split('@')[0].capitalize %></strong>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
+  <% else %>
+      <p class="no-users">No users available.</p>
+    <% end %>
+<div class="pagination">
+    <%= will_paginate @users %>
+</div>
+  </div>
+
+  <div class="chat-window">
+    <div id="chat-content">
+      <h3>Select a user to start a chat</h3>
     </div>
   </div>
-<% end %>
-<% if @users.any? %>
-  <br>
-  <table class="table table-striped table-hover">
-    <thead class="table table-dark">
-    <tr>
-      <th>User</th>
-      <th>E-Mail</th>
-      <th>Link</th>
-      <% if params[:search].present? %>
-        <th>Sent Messages</th>
-        <th>Received Messages</th>
-      <% end %>
-    </tr>
-    </thead>
-    <tbody>
-    <% @users.each do |user| %>
-      <tr>
-        <td><strong><%= user.email.split('@')[0].capitalize %></strong></td>
-        <td><%= user.email %></td>
-        <td><%= link_to "Chat", chat_user_path(user), class: "btn btn-success btn-sm" %></td>
-        <% if params[:search].present? %>
-          <td><%= current_user.sent_messages.where(receiver_id: user.id).count %></td>
-          <td><%= current_user.received_messages.where(sender_id: user.id).count %></td>
-        <% end %>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>No users available.</p>
-<% end %>
-<%= will_paginate @users %>
-
-
-<style>
-    h2 {
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
-
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    .pagination a, .pagination span {
-        padding: 10px;
-        color: #333;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-        margin-right: 5px;
-        text-decoration: none;
-        transition: all 0.2s ease;
-    }
-
-    .pagination a:hover, .pagination span.current {
-        background-color: #333;
-        color: #fff;
-    }
-</style>
+</div>

@@ -16,5 +16,8 @@ class UsersController < ApplicationController
                             .includes(:sender)
                             .order(created_at: :asc)
     @message = Message.new
+    respond_to do |format|
+      format.js
+    end
   end
 end

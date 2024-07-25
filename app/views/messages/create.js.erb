@@ -1,0 +1,6 @@
+document.querySelector('.messages-container').innerHTML = "<%= j render partial: 'messages/message', collection: @messages %>";
+document.getElementById('new_message').reset();
+var messagesContainer = document.querySelector('.messages-container');
+messagesContainer.scrollTop = messagesContainer.scrollHeight;
+var chatContainer = document.querySelector('.chat-window');
+chatContainer.scrollTop = messagesContainer.scrollHeight;
