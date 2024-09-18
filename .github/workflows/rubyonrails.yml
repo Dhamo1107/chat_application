@@ -29,8 +29,10 @@ jobs:
           ruby-version: '3.1.2'
           bundler-cache: true
 
-      - name: Make bin/rails executable
-        run: chmod +x bin/rails
+      - name: Make bin/rails and bin/rake executable
+        run: |
+          chmod +x bin/rails
+          chmod +x bin/rake
 
       - name: Set up database schema
         run: bin/rails db:prepare
