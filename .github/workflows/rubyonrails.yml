@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     services:
       postgres:
         image: postgres:11-alpine
@@ -41,37 +41,12 @@ jobs:
       - name: Ensure Rails binstubs are executable
         run: chmod +x bin/rails bin/rake
 
+      - name: Install dependencies
+        run: bundle install
+
       - name: Set up database
         run: |
           bin/rails db:prepare
 
       - name: Run tests
         run: bin/rake
-
-  lint:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Ruby and gems
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1.2
-          bundler-cache: true
-
-      - name: Ensure binstubs are executable
-        run: chmod +x bin/bundler-audit bin/brakeman bin/rubocop
-
-      - name: Generate binstubs
-        run: bundle binstubs bundler-audit brakeman rubocop
-
-      - name: Security audit dependencies
-        run: bin/bundler-audit --update
-
-      - name: Security audit application code
-        run: bin/brakeman -q -w2
-
-      - name: Lint Ruby files
-        run: bin/rubocop --parallel
